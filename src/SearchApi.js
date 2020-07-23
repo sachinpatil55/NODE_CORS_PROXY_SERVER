@@ -16,17 +16,22 @@ function useApi(query) {
           }
         );
         const json = await response.json();
-        console.log(json);
-        setResults(json.body.data );
-        setError(false)
+        if(json.type == 'error'){
+          setErrorfn(json.message);
+        }else{
+          setResults(json.body ? json.body.data : json);
+          setError(false)
+        }      
       } catch(err) {
-        setError(true);
-        setResults([]);
+        setErrorfn(err)
        }finally {
         setLoading(false);
       }
     }
-
+    const setErrorfn = (err)=>{
+      setError(true);
+      setResults([]);
+    }
     if (query !== '') {
       fetchData();
     }
